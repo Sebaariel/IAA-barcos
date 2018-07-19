@@ -39,6 +39,7 @@ void Instances::LoadInstances(std::string instance){
                         pch = strtok(NULL, ",");
                         terminal.SetId(atoi(pch));
                         pch = strtok(NULL, ",");
+                        terminal.SetDraftLimit(atof(pch));
                         pch = strtok(NULL, ",");
                         terminal.SetWaitingTime(atof(pch));
                         pch = strtok(NULL, ",");
@@ -63,6 +64,7 @@ void Instances::LoadInstances(std::string instance){
                         pch = strtok(NULL, ",");
                         node.SetUpperTimeWindow(atof(pch));
                         pch = strtok(NULL, ",");
+                        node.SetDensity(atof(pch));
                         pch = strtok(NULL, ",");
                         node.SetCargoType(atoi(pch));
                         _listOfNodes.push_back(node);

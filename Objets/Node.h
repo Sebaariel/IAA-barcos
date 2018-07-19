@@ -8,6 +8,7 @@ class Node {
         float _loadingTime;
         float _lowerTimeWindow;
         float _upperTimeWindow;
+        float _density;
         int _cargoType;
 
     public:
@@ -18,6 +19,7 @@ class Node {
         void SetLoadingTime( float loadingTime ) { _loadingTime = loadingTime; }
         void SetLowerTimeWindow( float lowerTimeWindow ) { _lowerTimeWindow = lowerTimeWindow; }
         void SetUpperTimeWindow( float upperTimeWindow ) { _upperTimeWindow = upperTimeWindow; }
+        void SetDensity( float density ) { _density = density; }
         void SetCargoType( int cargoType ) { _cargoType = cargoType; }
         void SetTerminal( char* terminal) { strcpy(_terminal, terminal); }
 
@@ -28,6 +30,7 @@ class Node {
         float GetLoadingTime( ) { return _loadingTime; }
         float GetLowerTimeWindow( ) { return _lowerTimeWindow; }
         float GetUpperTimeWindow( ) { return _upperTimeWindow; }
+        float GetDensity( ) { return _density; }
         int GetCargoType( ) { return _cargoType; }
         char* GetTerminal( ) { return _terminal; }
 };
