@@ -11,6 +11,7 @@ void Instances::LoadInstances(std::string instance){
     int skip = 0;
     int sheetNumber = 0;
     if (myfile.is_open()){
+        int terminalNumber = 0;
         while ( getline (myfile,line) ){
             strcpy(str, line.c_str());
             if (strcmp(str, cmpStr) == 0){
@@ -19,10 +20,13 @@ void Instances::LoadInstances(std::string instance){
                 skip = 0;
                 sheetNumber++;
             }else{
-              pch = strtok(str, ",");
+
+                pch = strtok(str, ",");
+
               while (pch != NULL){
                   switch (sheetNumber) {
                     case 1:
+                    {
                         Vehicle vehicle;
                         vehicle.SetId(atoi(pch));
                         pch = strtok(NULL, ",");
@@ -33,7 +37,9 @@ void Instances::LoadInstances(std::string instance){
                         vehicle.SetType(atoi(pch));
                         _listOfVehicles.push_back(vehicle);
                         break;
+                    }
                     case 2:
+                    {
                         Terminal terminal;
                         terminal.SetName(pch);
                         pch = strtok(NULL, ",");
@@ -46,7 +52,9 @@ void Instances::LoadInstances(std::string instance){
                         terminal.SetEnteringTime(atof(pch));
                         _listOfTerminals.push_back(terminal);
                         break;
+                        }
                     case 3:
+                    {
                         Node node;
                         node.SetNumber(atoi(pch));
                         pch = strtok(NULL, ",");
@@ -69,9 +77,17 @@ void Instances::LoadInstances(std::string instance){
                         node.SetCargoType(atoi(pch));
                         _listOfNodes.push_back(node);
                         break;
+                        }
                     case 4:
+                    {
+                        for(int i = 0; i < (int)_listOfTerminals.size(); i = i + 1)
+                        {
+                            _listOfTerminals.at(terminalNumber).AddTerminalDistance(atof(pch));
+                            pch = strtok(NULL, ",");
+                        }
+                        terminalNumber = terminalNumber + 1;
                         break;
-
+                    }
                   }
                   pch = strtok(NULL, ",");
               }
@@ -100,7 +116,10 @@ void Instances::PrintInstances(){
       cout << "ID: " << it->GetId() << endl;
       cout << "Waiting Time: " << it->GetWaitingTime() << endl;
       cout << "Entering Time: " << it->GetEnteringTime() << endl;
-      cout << endl;
+      cout << "Distancias" << endl;
+      for(std::size_t i=0; i<it->GetDistances().size(); ++i){
+          std::cout << it->GetDistances()[i] << endl;
+    }
       cont++;
   }
 

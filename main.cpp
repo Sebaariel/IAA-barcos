@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     vector<Terminal> listOfTerminals = instances.GetTerminals();
     vector<Node> listOfNodes = instances.GetNodes();
 
-    //instances.PrintInstances();
+    instances.PrintInstances();
 
     return 0;
 }

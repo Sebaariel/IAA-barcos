@@ -26,6 +26,7 @@ Node,Associated terminal,Pickup or delivery,Required washing time [hr],Cargo loa
 8.0,C,-1.0,5.0,-3149.341,2.0,50.0,120.0,1180.0,1.0
 9.0,ANCH,,0.0,0.0,0.0,0.0,1000.0,0.0,0.0
 -
+-,-
 0.0,70.0,78.0,77.0
 70.0,0.0,8.0,7.0
 78.0,8.0,0.0,1.0

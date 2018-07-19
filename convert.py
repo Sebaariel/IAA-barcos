@@ -15,12 +15,15 @@ def xls_to_csv():
 
         sheets = x.sheet_names()
         sheets = reversed(sorted(sheets))
-
+        sheetNumber = 0;
         for sheet in sheets:
             x1 = x.sheet_by_name(sheet)
             writecsv.writerow('-')
+            if (sheetNumber == 3):
+                writecsv.writerow('--')
             for rownum in xrange(x1.nrows):
                 writecsv.writerow(x1.row_values(rownum))
+            sheetNumber = sheetNumber + 1;
 
         txtFile.close()
 
