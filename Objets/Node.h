@@ -1,6 +1,8 @@
+#include "Terminal.h"
+
 class Node {
     private:
-        char _terminal[5];
+        Terminal _terminal;
         int _number;
         int _pickupOrDelivery;
         float _washingTime;
@@ -21,7 +23,7 @@ class Node {
         void SetUpperTimeWindow( float upperTimeWindow ) { _upperTimeWindow = upperTimeWindow; }
         void SetDensity( float density ) { _density = density; }
         void SetCargoType( int cargoType ) { _cargoType = cargoType; }
-        void SetTerminal( char* terminal) { strcpy(_terminal, terminal); }
+        void SetTerminal( Terminal terminal) { _terminal = terminal; }
 
         int GetNumber( ) { return _number; }
         int GetPickupOrDelivery( ) { return _pickupOrDelivery; }
@@ -32,5 +34,5 @@ class Node {
         float GetUpperTimeWindow( ) { return _upperTimeWindow; }
         float GetDensity( ) { return _density; }
         int GetCargoType( ) { return _cargoType; }
-        char* GetTerminal( ) { return _terminal; }
+        Terminal GetTerminal( ) { return _terminal; }
 };

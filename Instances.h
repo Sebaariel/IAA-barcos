@@ -1,8 +1,5 @@
 #include "Objets/Node.h"
 #include "Objets/Vehicle.h"
-#include "Objets/Terminal.h"
-
-
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "Instances.h"
+#include <algorithm>
 using namespace std;
-
 
 void Instances::LoadInstances(std::string instance){
     string line;
@@ -58,7 +58,14 @@ void Instances::LoadInstances(std::string instance){
                         Node node;
                         node.SetNumber(atoi(pch));
                         pch = strtok(NULL, ",");
-                        node.SetTerminal(pch);
+
+                        auto it = std::find_if(_listOfTerminals.begin(), _listOfTerminals.end(), [pch](Terminal& obj) {return (strcmp(obj.GetName(), pch) == 0);});
+
+                        if (it != _listOfTerminals.end()){
+                          auto index = std::distance(_listOfTerminals.begin(), it);
+                          node.SetTerminal(_listOfTerminals.at(index));
+                        }
+
                         pch = strtok(NULL, ",");
                         node.SetPickupOrDelivery(atoi(pch));
                         pch = strtok(NULL, ",");
@@ -134,7 +141,7 @@ void Instances::PrintInstances(){
       cout << "Lower Time Window: " << it->GetLowerTimeWindow() << endl;
       cout << "Upper Time Window: " << it->GetUpperTimeWindow() << endl;
       cout << "Cargo Type: " << it->GetCargoType() << endl;
-      cout << "Terminal: " << it->GetTerminal() << endl;
+      cout << "Terminal: " << it->GetTerminal().GetName() << endl;
       cout << endl;
       cont++;
   }
