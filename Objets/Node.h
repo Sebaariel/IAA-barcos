@@ -1,4 +1,5 @@
 #include "Terminal.h"
+ using namespace std;
 
 class Node {
     private:
@@ -25,7 +26,7 @@ class Node {
         void SetCargoType( int cargoType ) { _cargoType = cargoType; }
         void SetTerminal( Terminal terminal) { _terminal = terminal; }
 
-        int GetNumber( ) { return _number; }
+        int GetNumber( ) const { return _number; }
         int GetPickupOrDelivery( ) { return _pickupOrDelivery; }
         float GetWashingTime( ) { return _washingTime; }
         float GetCargoLoad( ) { return _cargoLoad; }
@@ -37,4 +38,8 @@ class Node {
         Terminal GetTerminal( ) { return _terminal; }
 
         float GetMovementTime(Node node);
+        bool operator==(const Node &node) const {
+            cout << node.GetNumber() << " vs " << _number << endl;
+            return node.GetNumber() == _number;
+        }
 };

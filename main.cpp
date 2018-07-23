@@ -12,11 +12,11 @@ int main(int argc, char* argv[])
     Instances instances;
     instances.LoadInstances(argv[1]);
 
-    vector<int> solution(instances.GenerateInitialSolution(instances.GetNodes()));
-    //Solution solution(instances.GetNodes());
+    //vector<int> solution(instances.GenerateInitialSolution(instances.GetNodes()));
+    Solution solution(instances.GenerateInitialSolution(instances.GetNodes()));
 
-    for(int i : solution)
-        cout << "Node = " << i << endl;
+    for(tuple<Node, float> asignedNode : solution.GetAssignedNodes())
+        cout << "Node = " << get<0>(asignedNode).GetNumber() << endl;
     //instances.PrintInstances();
 
     return 0;

@@ -17,5 +17,5 @@ class Instances {
         vector<Terminal> GetTerminals(){ return _listOfTerminals; }
         vector<Node> GetNodes(){ return _listOfNodes; }
         vector<Vehicle> GetVehicles(){ return _listOfVehicles; }
-        vector<int> GenerateInitialSolution(vector<Node> nodes);
+        Solution GenerateInitialSolution(vector<Node> nodes);
 };

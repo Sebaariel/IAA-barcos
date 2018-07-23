@@ -1,5 +1,4 @@
 #include "Instances.h"
-#include <algorithm>
 
 using namespace std;
 
@@ -148,26 +147,37 @@ void Instances::PrintInstances(){
   }
 }
 
-vector<int> Instances::GenerateInitialSolution(vector<Node> nodes){
-    vector<int> solution;
-    solution.push_back(nodes.at(0).GetNumber());
+Solution Instances::GenerateInitialSolution(vector<Node> nodes){
+    Solution solution(nodes);
+    solution.AddAssignedNode(make_tuple(nodes.at(0), 0));
     int cont = 0;
     for (vector<Node>::iterator node = nodes.begin(); node != nodes.end(); ++node){
         float bestTime = 100000;
-        int bestNodeNumber;
+        Node bestNode;
         float timeRequired;
+        vector<Node> noAssignedNodes(solution.GetNoAssignedNodes());
         for (vector<Node>::iterator otherNode = nodes.begin(); otherNode != nodes.end(); ++otherNode){
-            if (node->GetNumber() != otherNode->GetNumber() && !(find(solution.begin(), solution.end(), otherNode->GetNumber()) != solution.end())){
+
+            int nodeNumber = (*otherNode).GetNumber();
+            auto it = find_if(noAssignedNodes.begin(),
+                                noAssignedNodes.end(),
+                                [nodeNumber](Node& obj) {
+                                    return (obj.GetNumber() == nodeNumber);
+                                });
+
+            bool noAssignedNodeFlag = (it != noAssignedNodes.end());
+
+            if ((node->GetNumber() != nodeNumber) && noAssignedNodeFlag){
                 timeRequired = node->GetMovementTime((*otherNode));
                 if (timeRequired < bestTime){
                     bestTime = timeRequired;
-                    bestNodeNumber = otherNode->GetNumber();
+                    bestNode = (*otherNode);
                 }
             }
         }
         cont++;
         if (cont != (int)nodes.size()){
-            solution.push_back(bestNodeNumber);
+            solution.AddAssignedNode(make_tuple(bestNode, bestTime));
         }
 
 
