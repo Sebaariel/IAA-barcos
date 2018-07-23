@@ -1,8 +1,9 @@
 #include "Instances.h"
 #include <algorithm>
+
 using namespace std;
 
-void Instances::LoadInstances(std::string instance){
+void Instances::LoadInstances(string instance){
     string line;
     char str[512];
     ifstream myfile (instance);
@@ -145,4 +146,31 @@ void Instances::PrintInstances(){
       cout << endl;
       cont++;
   }
+}
+
+vector<int> Instances::GenerateInitialSolution(vector<Node> nodes){
+    vector<int> solution;
+    solution.push_back(nodes.at(0).GetNumber());
+    int cont = 0;
+    for (vector<Node>::iterator node = nodes.begin(); node != nodes.end(); ++node){
+        float bestTime = 100000;
+        int bestNodeNumber;
+        float timeRequired;
+        for (vector<Node>::iterator otherNode = nodes.begin(); otherNode != nodes.end(); ++otherNode){
+            if (node->GetNumber() != otherNode->GetNumber() && !(find(solution.begin(), solution.end(), otherNode->GetNumber()) != solution.end())){
+                timeRequired = node->GetMovementTime((*otherNode));
+                if (timeRequired < bestTime){
+                    bestTime = timeRequired;
+                    bestNodeNumber = otherNode->GetNumber();
+                }
+            }
+        }
+        cont++;
+        if (cont != (int)nodes.size()){
+            solution.push_back(bestNodeNumber);
+        }
+
+
+    }
+    return solution;
 }

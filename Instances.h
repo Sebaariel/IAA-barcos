@@ -1,4 +1,5 @@
-#include "Objets/Node.h"
+#include "Objets/Node.cpp"
+#include "Objets/Solution.h"
 #include "Objets/Vehicle.h"
 
 using namespace std;
@@ -16,4 +17,5 @@ class Instances {
         vector<Terminal> GetTerminals(){ return _listOfTerminals; }
         vector<Node> GetNodes(){ return _listOfNodes; }
         vector<Vehicle> GetVehicles(){ return _listOfVehicles; }
+        vector<int> GenerateInitialSolution(vector<Node> nodes);
 };

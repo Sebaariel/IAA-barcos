@@ -35,4 +35,6 @@ class Node {
         float GetDensity( ) { return _density; }
         int GetCargoType( ) { return _cargoType; }
         Terminal GetTerminal( ) { return _terminal; }
+
+        float GetMovementTime(Node node);
 };

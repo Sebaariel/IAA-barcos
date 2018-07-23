@@ -4,7 +4,6 @@
 #include <string.h>
 #include <cstring>
 #include "Instances.cpp"
-#include "Solution.cpp"
 
 using namespace std;
 
@@ -13,7 +12,11 @@ int main(int argc, char* argv[])
     Instances instances;
     instances.LoadInstances(argv[1]);
 
-    instances.GetInitialSolution();
+    vector<int> solution(instances.GenerateInitialSolution(instances.GetNodes()));
+    //Solution solution(instances.GetNodes());
+
+    for(int i : solution)
+        cout << "Node = " << i << endl;
     //instances.PrintInstances();
 
     return 0;
