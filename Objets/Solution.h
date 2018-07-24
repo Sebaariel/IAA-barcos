@@ -37,7 +37,7 @@ class Solution {
         void PrintAssignedNodes(){
             cout << "Assigned Nodes: " << endl;
             for (tuple<Node, float> node : _assignedNodes){
-                cout << "Node: " << (get<0>(node)).GetNumber() << " Time: " << get<1>(node) << endl;
+                cout << "Node: " << (get<0>(node)).GetNumber() << " Terminal: " << (get<0>(node)).GetTerminal().GetName() << " Time: " << get<1>(node) << endl;
             }
             cout << endl;
         }

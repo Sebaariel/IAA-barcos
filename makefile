@@ -17,9 +17,9 @@ OBJS=$(subst .cc,.o,$(SRCS))
 main: $(OBJS)
 	$(CXX) $(WALL) $(SRCS) -o main
 instance:
-	./main instancesTxt/$(INSTANCE)
+	./main $(INSTANCE)
 clean:
 	$(RM) main
 default:
-	./main instancesTxt/5nodes_Instance1.txt
+	./main 5nodes_Instance1.txt
 distclean: clean $(RM) main

@@ -13,6 +13,7 @@ class Node {
         float _upperTimeWindow;
         float _density;
         int _cargoType;
+        int _totalNodes;
 
     public:
         void SetNumber( int number ) { _number = number; }
@@ -25,6 +26,7 @@ class Node {
         void SetDensity( float density ) { _density = density; }
         void SetCargoType( int cargoType ) { _cargoType = cargoType; }
         void SetTerminal( Terminal terminal) { _terminal = terminal; }
+        void SetTotalNodes( int totalNodes) { _totalNodes = totalNodes; }
 
         int GetNumber( ) const { return _number; }
         int GetPickupOrDelivery( ) { return _pickupOrDelivery; }
@@ -35,6 +37,7 @@ class Node {
         float GetUpperTimeWindow( ) { return _upperTimeWindow; }
         float GetDensity( ) { return _density; }
         int GetCargoType( ) { return _cargoType; }
+        int GetTotalNodes( ) { return _totalNodes; }
         Terminal GetTerminal( ) { return _terminal; }
 
         float CalculateSailingTime(Node nextNode);

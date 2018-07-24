@@ -5,7 +5,7 @@ using namespace std;
 
 float Node::GetTotalMovementTime(Node nextNode){
     float totalRequiredTime = 0;
-    if (_number == 0 ||  nextNode.GetNumber() == 6){ //TODO: corregir por size() de nùmero de terminales
+    if (_number == 0 ||  nextNode.GetNumber() == _totalNodes + 1){
         totalRequiredTime =   CalculateSailingTime(nextNode)
                             + CalculateEnteringTime(nextNode);
     } else if (_terminal.GetId() != nextNode.GetTerminal().GetId()){

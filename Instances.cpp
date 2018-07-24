@@ -5,7 +5,8 @@ using namespace std;
 void Instances::LoadInstances(string instance){
     string line;
     char str[512];
-    ifstream myfile (instance);
+    int numOfNodes = stoi(instance.substr(0,1));
+    ifstream myfile ("instancesTxt/"+instance);
     char * pch;
     const char * cmpStr = "-\r";
     int skip = 0;
@@ -92,6 +93,7 @@ void Instances::LoadInstances(string instance){
                         node.SetDensity(atof(pch));
                         pch = strtok(NULL, ",");
                         node.SetCargoType(atoi(pch));
+                        node.SetTotalNodes(numOfNodes);
                         _listOfNodes.push_back(node);
                         break;
                     }
@@ -149,8 +151,10 @@ void Instances::PrintInstances(){
 
 Solution Instances::GenerateInitialSolution(vector<Node> nodes){
     Solution solution(nodes);
-    solution.AddAssignedNode(make_tuple(nodes.at(0), 0));
+    float currentTime = 0;
+    solution.AddAssignedNode(make_tuple(nodes.at(0), currentTime));
     Node bestNode;
+
 
     for (vector<Node>::iterator node = nodes.begin(); node != nodes.end(); ++node){
         float bestTime = 100000;
@@ -180,12 +184,15 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
             }
         }
         if (addNode){
-            solution.AddAssignedNode(make_tuple(bestNode, bestTime));
+            currentTime = currentTime + bestTime;
+            solution.AddAssignedNode(make_tuple(bestNode, currentTime));
         }
 
 
     }
     float timeRequiredLast = bestNode.GetTotalMovementTime(nodes.at(solution.GetTotalNodes()-1));
-    solution.AddAssignedNode(make_tuple(nodes.at(solution.GetTotalNodes()-1), timeRequiredLast));
+
+    currentTime = currentTime + timeRequiredLast;
+    solution.AddAssignedNode(make_tuple(nodes.at(solution.GetTotalNodes()-1), currentTime));
     return solution;
 }
