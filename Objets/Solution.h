@@ -7,6 +7,7 @@ class Solution {
     private:
         vector<tuple<Node, float>> _assignedNodes;
         vector<Node> _noAssignedNodes;
+        int _totalNodes;
 
 
     public:
@@ -24,18 +25,19 @@ class Solution {
 
         vector<tuple<Node, float>> GetAssignedNodes( ) { return _assignedNodes; }
         vector<Node> GetNoAssignedNodes( ) { return _noAssignedNodes; }
+        int GetTotalNodes( ) { return _totalNodes; }
         bool CheckFactibility( );
         void PrintNoAssignedNodes(){
-            cout << "No Assigned Nodes = ";
+            cout << "No Assigned Nodes: ";
             for (Node node : _noAssignedNodes){
                 cout << node.GetNumber();
             }
             cout << endl;
         }
         void PrintAssignedNodes(){
-            cout << "Assigned Nodes = ";
+            cout << "Assigned Nodes: " << endl;
             for (tuple<Node, float> node : _assignedNodes){
-                cout << (get<0>(node)).GetNumber();
+                cout << "Node: " << (get<0>(node)).GetNumber() << " Time: " << get<1>(node) << endl;
             }
             cout << endl;
         }
@@ -46,4 +48,5 @@ Solution::Solution( vector<Node> nodes ) {
     for(Node node : nodes){
         _noAssignedNodes.push_back(node);
     }
+    _totalNodes = _noAssignedNodes.size();
 }

@@ -15,8 +15,7 @@ int main(int argc, char* argv[])
     //vector<int> solution(instances.GenerateInitialSolution(instances.GetNodes()));
     Solution solution(instances.GenerateInitialSolution(instances.GetNodes()));
 
-    for(tuple<Node, float> asignedNode : solution.GetAssignedNodes())
-        cout << "Node = " << get<0>(asignedNode).GetNumber() << endl;
+    solution.PrintAssignedNodes();
     //instances.PrintInstances();
 
     return 0;

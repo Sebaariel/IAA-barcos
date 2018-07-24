@@ -13,17 +13,26 @@ def xls_to_csv():
         txtFile = open('instancesTxt/'+file_name+'.txt', 'wb')
         writecsv = csv.writer(txtFile, quoting=csv.QUOTE_ALL)
 
-        sheets = x.sheet_names()
-        sheets = reversed(sorted(sheets))
-        sheetNumber = 0;
-        for sheet in sheets:
-            x1 = x.sheet_by_name(sheet)
-            writecsv.writerow('-')
-            if (sheetNumber == 3):
-                writecsv.writerow('--')
-            for rownum in xrange(x1.nrows):
-                writecsv.writerow(x1.row_values(rownum))
-            sheetNumber = sheetNumber + 1;
+        currentSheet = x.sheet_by_index(3)
+        writecsv.writerow('-')
+        for rownum in xrange(currentSheet.nrows):
+            writecsv.writerow(currentSheet.row_values(rownum))
+
+        currentSheet = x.sheet_by_index(1)
+        writecsv.writerow('-')
+        for rownum in xrange(currentSheet.nrows):
+            writecsv.writerow(currentSheet.row_values(rownum))
+
+        currentSheet = x.sheet_by_index(2)
+        writecsv.writerow('-')
+        writecsv.writerow('--')
+        for rownum in xrange(currentSheet.nrows):
+            writecsv.writerow(currentSheet.row_values(rownum))
+
+        currentSheet = x.sheet_by_index(0)
+        writecsv.writerow('-')
+        for rownum in xrange(currentSheet.nrows):
+            writecsv.writerow(currentSheet.row_values(rownum))
 
         txtFile.close()
 

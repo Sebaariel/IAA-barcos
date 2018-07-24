@@ -1,5 +1,7 @@
 #include <vector>
 
+using namespace std;
+
 class Terminal {
     private:
         char _name[5];
@@ -7,7 +9,7 @@ class Terminal {
         float _draftLimit;
         float _waitingTime;
         float _enteringTime;
-        std::vector<float> _distances;
+        vector<float> _distances;
 
     public:
         void SetName( char* name ) { strcpy(_name, name); }
@@ -21,5 +23,11 @@ class Terminal {
         int GetId( ) { return _id; }
         float GetWaitingTime( ) { return _waitingTime; }
         float GetEnteringTime( ) { return _enteringTime; }
-        std::vector<float> GetDistances( ) { return _distances; }
+        vector<float> GetDistances( ) { return _distances; }
+        float GetTerminalDistance(int terminalId){
+            float distance = _distances.at(terminalId);
+            return distance;
+
+
+        }
 };

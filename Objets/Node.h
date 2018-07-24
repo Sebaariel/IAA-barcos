@@ -37,9 +37,14 @@ class Node {
         int GetCargoType( ) { return _cargoType; }
         Terminal GetTerminal( ) { return _terminal; }
 
-        float GetMovementTime(Node node);
+        float CalculateSailingTime(Node nextNode);
+        float CalculateEnteringTime(Node nextNode);
+        float CalculateWashingTime();
+        float CalculateLoadingUnloadingTime();
+
+        float GetTotalMovementTime(Node node);
+
         bool operator==(const Node &node) const {
-            cout << node.GetNumber() << " vs " << _number << endl;
             return node.GetNumber() == _number;
         }
 };

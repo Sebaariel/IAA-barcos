@@ -55,14 +55,24 @@ void Instances::LoadInstances(string instance){
                         }
                     case 3:
                     {
+                        for(int i = 0; i < (int)_listOfTerminals.size(); i = i + 1)
+                        {
+                            _listOfTerminals.at(terminalNumber).AddTerminalDistance(atof(pch));
+                            pch = strtok(NULL, ",");
+                        }
+                        terminalNumber = terminalNumber + 1;
+                        break;
+                    }
+                    case 4:
+                    {
                         Node node;
                         node.SetNumber(atoi(pch));
                         pch = strtok(NULL, ",");
 
-                        auto it = std::find_if(_listOfTerminals.begin(), _listOfTerminals.end(), [pch](Terminal& obj) {return (strcmp(obj.GetName(), pch) == 0);});
+                        auto it = find_if(_listOfTerminals.begin(), _listOfTerminals.end(), [pch](Terminal& obj) {return (strcmp(obj.GetName(), pch) == 0);});
 
                         if (it != _listOfTerminals.end()){
-                          auto index = std::distance(_listOfTerminals.begin(), it);
+                          auto index = distance(_listOfTerminals.begin(), it);
                           node.SetTerminal(_listOfTerminals.at(index));
                         }
 
@@ -83,16 +93,6 @@ void Instances::LoadInstances(string instance){
                         pch = strtok(NULL, ",");
                         node.SetCargoType(atoi(pch));
                         _listOfNodes.push_back(node);
-                        break;
-                        }
-                    case 4:
-                    {
-                        for(int i = 0; i < (int)_listOfTerminals.size(); i = i + 1)
-                        {
-                            _listOfTerminals.at(terminalNumber).AddTerminalDistance(atof(pch));
-                            pch = strtok(NULL, ",");
-                        }
-                        terminalNumber = terminalNumber + 1;
                         break;
                     }
                   }
@@ -124,9 +124,9 @@ void Instances::PrintInstances(){
       cout << "Waiting Time: " << it->GetWaitingTime() << endl;
       cout << "Entering Time: " << it->GetEnteringTime() << endl;
       cout << "Distancias" << endl;
-      for(std::size_t i=0; i<it->GetDistances().size(); ++i){
-          std::cout << it->GetDistances()[i] << endl;
-    }
+      for(size_t i=0; i<it->GetDistances().size(); ++i){
+          cout << it->GetDistances()[i] << endl;
+      }
       cont++;
   }
 
@@ -150,11 +150,13 @@ void Instances::PrintInstances(){
 Solution Instances::GenerateInitialSolution(vector<Node> nodes){
     Solution solution(nodes);
     solution.AddAssignedNode(make_tuple(nodes.at(0), 0));
-    int cont = 0;
+    Node bestNode;
+
     for (vector<Node>::iterator node = nodes.begin(); node != nodes.end(); ++node){
         float bestTime = 100000;
-        Node bestNode;
+
         float timeRequired;
+        bool addNode = false;
         vector<Node> noAssignedNodes(solution.GetNoAssignedNodes());
         for (vector<Node>::iterator otherNode = nodes.begin(); otherNode != nodes.end(); ++otherNode){
 
@@ -167,20 +169,23 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
 
             bool noAssignedNodeFlag = (it != noAssignedNodes.end());
 
-            if ((node->GetNumber() != nodeNumber) && noAssignedNodeFlag){
-                timeRequired = node->GetMovementTime((*otherNode));
+            if ((node->GetNumber() != nodeNumber) && noAssignedNodeFlag && (*otherNode).GetNumber() != solution.GetTotalNodes()-1){
+                timeRequired = node->GetTotalMovementTime((*otherNode));
+
                 if (timeRequired < bestTime){
                     bestTime = timeRequired;
                     bestNode = (*otherNode);
+                    addNode = true;
                 }
             }
         }
-        cont++;
-        if (cont != (int)nodes.size()){
+        if (addNode){
             solution.AddAssignedNode(make_tuple(bestNode, bestTime));
         }
 
 
     }
+    float timeRequiredLast = bestNode.GetTotalMovementTime(nodes.at(solution.GetTotalNodes()-1));
+    solution.AddAssignedNode(make_tuple(nodes.at(solution.GetTotalNodes()-1), timeRequiredLast));
     return solution;
 }
