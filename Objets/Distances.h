@@ -1,6 +1,3 @@
-#include <vector>
-
-
 class Distances {
     private:
         int _id;

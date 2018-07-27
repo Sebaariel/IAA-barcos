@@ -3,6 +3,9 @@
 #include <string>
 #include <string.h>
 #include <cstring>
+#include <tuple>
+#include <algorithm>
+#include <vector>
 #include "Instances.cpp"
 
 using namespace std;

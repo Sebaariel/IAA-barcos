@@ -1,52 +1,66 @@
-#include <tuple>
-#include <algorithm>
+#include "AssignedNode.h"
 
 using namespace std;
 
 class Solution {
     private:
-        vector<tuple<Node, float>> _assignedNodes;
+        vector<AssignedNode> _assignedNodes;
         vector<Node> _noAssignedNodes;
         int _totalNodes;
 
 
     public:
         Solution(vector<Node> nodes);
-        void AddAssignedNode( tuple<Node, float> assignedNode ) {
-            _assignedNodes.push_back(assignedNode);
-            int nodeNumber = (get<0>(assignedNode)).GetNumber();
-            auto it = find_if(_noAssignedNodes.begin(), _noAssignedNodes.end(), [nodeNumber](Node& obj) {return (obj.GetNumber() == nodeNumber);});
-
-            if (it != _noAssignedNodes.end()){
-              auto index = std::distance(_noAssignedNodes.begin(), it);
-              _noAssignedNodes.erase(_noAssignedNodes.begin() + index);
-            }
-        }
-
-        vector<tuple<Node, float>> GetAssignedNodes( ) { return _assignedNodes; }
+        vector<AssignedNode> GetAssignedNodes( ) { return _assignedNodes; }
         vector<Node> GetNoAssignedNodes( ) { return _noAssignedNodes; }
         int GetTotalNodes( ) { return _totalNodes; }
-        bool CheckFactibility( );
-        void PrintNoAssignedNodes(){
-            cout << "No Assigned Nodes: ";
+        bool CheckFactibility(Node nextNode);
+        void PrintAssignedNodesLine();
+        void PrintAssignedNodes();
+        void PrintNoAssignedNodesLine();
+
+        void RemoveCandidate(Node node);
+        void SetCandidates(vector<tuple<Node, float>> candidates){ _assignedNodes.back().SetCandidates(candidates); };
+
+        //Constructor de soluciòn
+        void AddAssignedNode(AssignedNode assignedNode){
+            // cout << "@@@" << endl;
+            // cout << "@@@Node to asign: " << assignedNode.GetNode().GetNumber() << endl;
+
+
+            float prevTime = 0;
+            float bestTime = assignedNode.GetBestTime();
+            if (_assignedNodes.size() != 0){
+                // cout << "@@@Node compare node: " << _assignedNodes.back().GetNode().GetNumber() << endl;
+                prevTime = _assignedNodes.back().GetBestTime();
+                // cout << "@@@@PrevBestTime:" << prevTime << endl;
+                bestTime = assignedNode.GetNode().GetTotalMovementTime(_assignedNodes.back().GetNode());
+            }
+
+            //float bestTime = assignedNode.GetTotalMovementTime(_assignedNodes.back().GetNode());
+            // cout << "@@@@CurrBestTime:" << bestTime << endl;
+            // cout << "PrevBestTime:" << prevTime << endl;
+            // cout << "CurrBestTime:" << bestTime << endl;
+            // cout << "@@@@AddedTime:" << (prevTime + bestTime) << endl;
+            assignedNode.SetBestTime(prevTime + bestTime);
+            _assignedNodes.push_back(assignedNode);
+            RemoveFromNoAssignedNodes(assignedNode.GetNode());
+        };
+        void AddNoAssignedNode(Node noAssignedNode){
+            bool add = true;
             for (Node node : _noAssignedNodes){
-                cout << node.GetNumber();
+                if (node.GetNumber() == noAssignedNode.GetNumber()){
+                    add = false;
+                    break;
+                }
             }
-            cout << endl;
-        }
-        void PrintAssignedNodes(){
-            cout << "Assigned Nodes: " << endl;
-            for (tuple<Node, float> node : _assignedNodes){
-                cout << "Node: " << (get<0>(node)).GetNumber() << " Terminal: " << (get<0>(node)).GetTerminal().GetName() << " Time: " << get<1>(node) << endl;
+            if (add){
+                _noAssignedNodes.push_back(noAssignedNode);
             }
-            cout << endl;
-        }
+
+        };
+        void SetNoAssignedNodes(vector<Node> noAssignedNode);
+        void RemoveFromAssignedNodes(AssignedNode assignedNode);
+        void RemoveFromNoAssignedNodes(Node noAssignedNode);
+        bool CheckTimeWindow(Node nextNode);
 };
-
-
-Solution::Solution( vector<Node> nodes ) {
-    for(Node node : nodes){
-        _noAssignedNodes.push_back(node);
-    }
-    _totalNodes = _noAssignedNodes.size();
-}
