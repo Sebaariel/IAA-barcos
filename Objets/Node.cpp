@@ -10,18 +10,22 @@ float Node::GetTotalMovementTime(Node nextNode){
         totalRequiredTime =   CalculateSailingTime(nextNode)
                             + CalculateEnteringTime(nextNode);
         if (_number == 0){
-            cout << "totalRequiredTime from ANCH to node (" << nextNode.GetNumber() << ") " << totalRequiredTime << endl;
+            //cout << "totalRequiredTime from ANCH to node (" << nextNode.GetNumber() << ") " << totalRequiredTime << endl;
         }
 
     } else if (_terminal.GetId() != nextNode.GetTerminal().GetId()){
+        cout << " Washing Time: " << _washingTime << endl;
+        cout << " Loading Time: " << _loadingTime << endl;
         totalRequiredTime =   _washingTime
                             + _loadingTime
                             + CalculateSailingTime(nextNode)
                             + CalculateEnteringTime(nextNode);
     } else{
+        cout << " Washing Time: " << _washingTime << endl;
+        cout << " Loading Time: " << _loadingTime << endl;
         totalRequiredTime =   _washingTime
                             + _loadingTime;
-        cout << "Mismo terminal" << endl;
+        //cout << "Mismo terminal" << endl;
     }
     //cout << "totalRequiredTime: " << totalRequiredTime << endl;
     return totalRequiredTime;
@@ -29,11 +33,15 @@ float Node::GetTotalMovementTime(Node nextNode){
 
 //I_ij
 float Node::CalculateSailingTime(Node nextNode){
-    return _terminal.GetTerminalDistance(nextNode.GetTerminal().GetId());
+    float distance = _terminal.GetTerminalDistance(nextNode.GetTerminal().GetId());
+    float knots = 4.3; //velocidad del barco
+    cout << " Sailing Time: " << distance/knots << endl;
+    return distance/knots;
 }
 
 //E_j
 float Node::CalculateEnteringTime(Node nextNode){
+    cout << " Entering Time: " << nextNode.GetTerminal().GetEnteringTime() << endl;
     return nextNode.GetTerminal().GetEnteringTime();
 }
 

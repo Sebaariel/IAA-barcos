@@ -28,15 +28,15 @@ void Instances::LoadInstances(string instance){
                   switch (sheetNumber) {
                     case 1:
                     {
-                        Vehicle vehicle;
-                        vehicle.SetId(atoi(pch));
+                        Tank tank;
+                        tank.SetId(atoi(pch));
                         pch = strtok(NULL, ",");
-                        vehicle.SetMinCapacity(atof(pch));
+                        tank.SetMinCapacity(atof(pch));
                         pch = strtok(NULL, ",");
-                        vehicle.SetMaxCapacity(atof(pch));
+                        tank.SetMaxCapacity(atof(pch));
                         pch = strtok(NULL, ",");
-                        vehicle.SetType(atoi(pch));
-                        _listOfVehicles.push_back(vehicle);
+                        tank.SetTankType(atoi(pch));
+                        _vehicle.AddTank(tank);
                         break;
                     }
                     case 2:
@@ -107,17 +107,6 @@ void Instances::LoadInstances(string instance){
 }
 
 void Instances::PrintInstances(){
-  int cont = 1;
-  for (vector<Vehicle>::iterator it = _listOfVehicles.begin(); it != _listOfVehicles.end(); ++it){
-
-      cout << "Vehicle " << cont << endl;
-      cout << "ID: " << it->GetId() << endl;
-      cout << "Min Capacity: " << it->GetMinCapacity() << endl;
-      cout << "Max Capacity: " << it->GetMaxCapacity() << endl;
-      cout << "Type: " << it->GetType() << endl;
-      cout << endl;
-      cont++;
-  }
   cout << "----" << endl;
   for (vector<Terminal>::iterator it = _listOfTerminals.begin(); it != _listOfTerminals.end(); ++it){
 
@@ -129,7 +118,6 @@ void Instances::PrintInstances(){
       for(size_t i=0; i<it->GetDistances().size(); ++i){
           cout << it->GetDistances()[i] << endl;
       }
-      cont++;
   }
 
   cout << "----" << endl;
@@ -145,17 +133,16 @@ void Instances::PrintInstances(){
       cout << "Cargo Type: " << it->GetCargoType() << endl;
       cout << "Terminal: " << it->GetTerminal().GetName() << endl;
       cout << endl;
-      cont++;
   }
 }
 
-Solution Instances::GenerateInitialSolution(vector<Node> nodes){
+Solution Instances::GenerateInitialSolution(vector<Node> nodes, Vehicle vehicle){
     Solution solution(nodes);
+    solution.SetVehicle(vehicle);
     float currentTime = 0;
     vector<tuple<Node, float>> firstNodeDomain;
     solution.AddAssignedNode(AssignedNode(nodes.at(0), currentTime, firstNodeDomain ));
     vector<tuple<Node, float>> firstCandidates;
-    bool flagDelete = true;
     int contador = 0;
     Node bestNode;
     while (solution.GetNoAssignedNodes().size() != 1){
@@ -163,7 +150,7 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
         int noFactNodes = 0;
         vector<tuple<Node, float>> candidates;
         for (Node node : solution.GetNoAssignedNodes()){
-            cout << "timeRequired from (" << solution.GetAssignedNodes().back().GetNode().GetNumber() << ") to (" << node.GetNumber() << "): " << solution.GetAssignedNodes().back().GetNode().GetTotalMovementTime(node) << endl;
+            // cout << "timeRequired from (" << solution.GetAssignedNodes().back().GetNode().GetNumber() << ") to (" << node.GetNumber() << "): " << solution.GetAssignedNodes().back().GetNode().GetTotalMovementTime(node) << endl;
             if (solution.CheckFactibility(node) && node.GetNumber() != solution.GetTotalNodes()-1){
                 float timeRequired = solution.GetAssignedNodes().back().GetNode().GetTotalMovementTime(node);
 
@@ -178,27 +165,13 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
                 noFactNodes = noFactNodes + 1;
             }
         }
-
-        if (true){//if (solution.GetAssignedNodes().size() == 2 ){
-            cout << ">>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
-            solution.PrintAssignedNodesLine();
-            solution.PrintNoAssignedNodesLine();
-            solution.GetAssignedNodes().back().PrintCandidates();
-        }
-
-
-        //cout << endl;
         if (noFactNodes != (int)solution.GetNoAssignedNodes().size()){
-
             currentTime = bestTime;
-            cout << "Agreguè nodo (" << bestNode.GetNumber() << ") con tiempo: " << currentTime << endl;
             solution.AddAssignedNode(AssignedNode(bestNode, currentTime, candidates));
-            // solution.GetAssignedNodes().back().PrintCandidatesLine();
-            // cout << "---" << endl;
         } else {
             AssignedNode newAssignedNode;
             AssignedNode removedNode;
-            bool newCandidate = false;
+            // bool newCandidate = false;
             if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){ //Si no agregò ninguno pero al ùltimo nodo le quedan candidatos
                 removedNode = solution.GetAssignedNodes().back();
                 solution.RemoveFromAssignedNodes(removedNode);                  //Remuevo nodo obtenido
@@ -215,9 +188,6 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
                 solution.RemoveFromAssignedNodes(removedNode);                  //Remuevo nodo obtenido
                 solution.AddNoAssignedNode(removedNode.GetNode());              //Agrego nodo obtenido a los nodos no asignados
                 if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){  //Si el nodo siguiente tiene candidatos:
-                    //cout << "Num of candidates node " << solution.GetAssignedNodes().back().GetNode().GetNumber() << ": " << solution.GetAssignedNodes().back().GetCandidates().size() << endl;
-                    //solution.RemoveCandidate(removedNode.GetNode());                  //Le remuevo de sus candidatos el eliminado anteriormente
-                    //cout << "Num of candidates node " << solution.GetAssignedNodes().back().GetNode().GetNumber() << ": " << solution.GetAssignedNodes().back().GetCandidates().size() << endl;
                     if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){ //Verifico si nuevamente tiene màs candidatos
                         newAssignedNode.SetNode(get<0>(solution.GetAssignedNodes().back().GetBestCandidate())); //Si los tiene, lo guardo para asignarlo posteriormente
                         newAssignedNode.SetBestTime(get<1>(solution.GetAssignedNodes().back().GetBestCandidate())); //Seteo tiempo de mejor candidato
@@ -225,105 +195,13 @@ Solution Instances::GenerateInitialSolution(vector<Node> nodes){
                         newAssignedNode.RemoveFromCandidate(newAssignedNode.GetNode()); //Le elimino a si mismo de los candidatos
                     }
                 }
-                solution.PrintAssignedNodesLine();
+                // solution.PrintAssignedNodesLine();
             }
             solution.AddNoAssignedNode(solution.GetAssignedNodes().back().GetNode());
             solution.RemoveFromAssignedNodes(solution.GetAssignedNodes().back());                  //Remuevo nodo obtenido
 
             solution.AddAssignedNode(newAssignedNode); //Agrego candidato
-            // if (true){ //Si hay nuevo candidato
-            //     solution.AddAssignedNode(newAssignedNode); //Agrego candidato
-            //     //solution.Remove(newAssignedNode.GetNode()); //Lo saco de los nodos no asignados
-            // } else { // Si no hay nuevo candidato
-            //     cout << "No solution" << endl;
-            // }
-
         }
-        // } else {
-        //     AssignedNode removedNode = solution.GetAssignedNodes().back();
-        //     // solution.RemoveCandidate(removedNode.GetNode());
-        //     // solution.RemoveFromAssignedNodes(removedNode);
-        //     // solution.AddNoAssignedNode(removedNode.GetNode());
-        //
-        //
-        //     while (removedNode.GetCandidates().size() == 0){
-        //         removedNode = solution.GetAssignedNodes().back();
-        //         solution.RemoveCandidate(removedNode.GetNode());
-        //         solution.RemoveFromAssignedNodes(removedNode);
-        //         solution.AddNoAssignedNode(removedNode.GetNode());
-        //     }
-        //
-        //     if (removedNode.GetCandidates().size() != 0){
-        //         //solution.GetAssignedNodes().back().PrintCandidates();
-        //         Node bestNodeCandidate = get<0>(removedNode.GetBestCandidate());
-        //         float bestTimeCandidate = get<1>(removedNode.GetBestCandidate());
-        //         vector<tuple<Node, float>> bestCandidates = removedNode.GetCandidates();
-        //
-        //         AssignedNode newAssignedNode(bestNodeCandidate, bestTimeCandidate, bestCandidates);
-        //         solution.AddAssignedNode(newAssignedNode);
-        //         solution.AddNoAssignedNode(removedNode.GetNode());
-        //         solution.RemoveCandidate(newAssignedNode.GetNode());
-        //     } else {
-        //         solution.RemoveFromAssignedNodes(removedNode);
-        //         //solution.AddNoAssignedNode(removedNode.GetNode());
-        //
-        //         //solution.SetNoAssignedNodes(removedNode.GetCandidatesNodes());
-        //     }
-        //
-        //
-        //
-        //     // if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){
-        //     //     solution.RemoveCandidate(removedNode.GetNode());
-        //     // }
-        //     //
-        //     // AssignedNode newAssignedNode;
-        //     //
-        //     // cout << "asd" <<
-        //     // if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){
-        //     //     solution.RemoveCandidate(bestNodeCandidate);
-        //     // }
-        //
-        //
-        //     //solution.SetNoAssignedNodes(solution.GetAssignedNodes().back().GetCandidates());
-        //
-        //     // while(removedNode.GetCandidates().size() == 0){
-        //     //     removedNode = solution.GetAssignedNodes().back();
-        //     //     solution.RemoveFromAssignedNodes(removedNode);
-        //     //     solution.AddNoAssignedNode(removedNode.GetNode());
-        //     //     //AssignedNode removedAssignedNod = solution.GetAssignedNodes().back();
-        //     //     // solution.RemoveFromAssignedNodes(solution.GetAssignedNodes().back());
-        //     //     // solution.AddNoAssignedNode(solution.GetAssignedNodes().back().GetNode());
-        //     //     if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){
-        //     //         solution.RemoveCandidate(removedAssignedNod.GetNode());
-        //     //     }
-        //     //     solution.GetAssignedNodes().back().PrintCandidates();
-        //     // } else {
-        //     //
-        //     // }
-        //     // AssignedNode removedAssignedNode = solution.GetAssignedNodes().back();
-        //     // AssignedNode newAssignedNode;
-        //     // Node bestNodeCandidate = get<0>(removedAssignedNode.GetBestCandidate());
-        //     // float bestTimeCandidate = get<1>(removedAssignedNode.GetBestCandidate());
-        //     // vector<tuple<Node, float>> bestCandidates = removedAssignedNode.GetCandidates();
-        //     // if (solution.GetAssignedNodes().back().GetCandidates().size() != 0){
-        //     //     solution.RemoveCandidate(bestNodeCandidate);
-        //     // }
-        //     // cout << "---" << endl;
-        //     // solution.RemoveFromAssignedNodes(solution.GetAssignedNodes().back());
-        //     // solution.AddNoAssignedNode(solution.GetAssignedNodes().back().GetNode());
-        //     // cout << "---" << endl;
-        //     // solution.AddAssignedNode(AssignedNode(bestNodeCandidate, bestTimeCandidate, bestCandidates));
-        //     //
-        //     //
-        //     // cout << "---" << endl;
-        //     // cout << "bestNodeCandidate: " << bestNodeCandidate.GetNumber() << endl;
-        //     // cout << "bestTimeCandidate: " << bestTimeCandidate << endl;
-        //     // solution.GetAssignedNodes().back().PrintCandidates();
-        //
-        //     //solution.RemoveFromAssignedNodes(solution.GetAssignedNodes().back());
-        //
-        //
-        // }
         contador = contador +1;
     }
 

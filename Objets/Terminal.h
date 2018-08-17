@@ -1,5 +1,3 @@
-
-
 using namespace std;
 
 class Terminal {
@@ -22,12 +20,11 @@ class Terminal {
         char* GetName( ) { return _name; }
         int GetId( ) { return _id; }
         float GetWaitingTime( ) { return _waitingTime; }
+        float GetDraftLimit( ) { return _draftLimit; }
         float GetEnteringTime( ) { return _enteringTime; }
         vector<float> GetDistances( ) { return _distances; }
         float GetTerminalDistance(int terminalId){
             float distance = _distances.at(terminalId);
             return distance;
-
-
         }
 };

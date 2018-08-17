@@ -1,6 +1,7 @@
 #include "Objets/Node.cpp"
-#include "Objets/Solution.cpp"
 #include "Objets/Vehicle.h"
+#include "Objets/Solution.cpp"
+
 
 using namespace std;
 
@@ -8,7 +9,7 @@ class Instances {
     private:
         vector<Terminal> _listOfTerminals;
         vector<Node> _listOfNodes;
-        vector<Vehicle> _listOfVehicles;
+        Vehicle _vehicle;
 
     public:
         void PrintInstances();
@@ -16,6 +17,6 @@ class Instances {
 
         vector<Terminal> GetTerminals(){ return _listOfTerminals; }
         vector<Node> GetNodes(){ return _listOfNodes; }
-        vector<Vehicle> GetVehicles(){ return _listOfVehicles; }
-        Solution GenerateInitialSolution(vector<Node> nodes);
+        Vehicle GetVehicle(){ return _vehicle; }
+        Solution GenerateInitialSolution(vector<Node> nodes, Vehicle vehicle);
 };
