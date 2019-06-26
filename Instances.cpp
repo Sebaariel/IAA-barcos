@@ -39,6 +39,7 @@ void Instances::LoadInstances(std::string instance){
                         pch = strtok(NULL, ",");
                         terminal.SetId(atoi(pch));
                         pch = strtok(NULL, ",");
+                        terminal.setDraftLimit(atof(pch));
                         pch = strtok(NULL, ",");
                         terminal.SetWaitingTime(atof(pch));
                         pch = strtok(NULL, ",");
@@ -96,6 +97,7 @@ void Instances::PrintInstances(){
 
       cout << "Terminal " << it->GetName() << endl;
       cout << "ID: " << it->GetId() << endl;
+      cout << "Draft Limit: " << it->GetDraftLimit() << endl;
       cout << "Waiting Time: " << it->GetWaitingTime() << endl;
       cout << "Entering Time: " << it->GetEnteringTime() << endl;
       cout << endl;
